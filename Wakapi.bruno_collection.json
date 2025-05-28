@@ -1,0 +1,544 @@
+{
+  "name": "Wakapi",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "Misc",
+      "filename": "Misc",
+      "seq": 1,
+      "root": {
+        "meta": {
+          "name": "Misc",
+          "seq": 1
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Get health",
+          "filename": "Get health.bru",
+          "seq": 1,
+          "request": {
+            "url": "{{BASE_URL}}/api/health",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Get metrics",
+          "filename": "Get metrics.bru",
+          "seq": 2,
+          "request": {
+            "url": "{{BASE_URL}}/api/metrics",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Send diagnostics",
+          "filename": "Send diagnostics.bru",
+          "seq": 3,
+          "request": {
+            "url": "{{BASE_URL}}/api/plugins/errors",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              },
+              {
+                "name": "X-Machine-Name",
+                "value": "devmachine",
+                "enabled": true
+              },
+              {
+                "name": "User-Agent",
+                "value": "wakatime/13.0.7 (Linux-4.15.0-91-generic-x86_64-with-glibc2.4) Python3.8.0.final.0 generator/1.42.1 generator-wakatime/4.0.0",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"platform\": \"unset\",\n  \"architecture\": \"unset\",\n  \"plugin\": \"\",\n  \"cli_version\": \"unset\",\n  \"logs\": \"{\\\"caller\\\":\\\"/home/ferdinand/dev/wakatime-cli/cmd/legacy/run.go:189\\\",\\\"func\\\":\\\"runCmd\\\",\\\"level\\\":\\\"error\\\",\\\"message\\\":\\\"failed to run command: failed to send heartbeat(s) due to api error: failed to send heartbeats via api client: invalid response status from \\\\\\\"https://bin.muetsch.io/n7jnywu/users/current/heartbeats.bulk\\\\\\\". got: 404, want: 201/202. body: \\\\\\\"\\\\\\\"\\\",\\\"now\\\":\\\"2021-08-07T00:33:26+02:00\\\",\\\"version\\\":\\\"unset\\\"}\\n\",\n  \"stacktrace\": \"goroutine 1 [running]:\\nruntime/debug.Stack(0x0, 0xc0001f8680, 0x196)\\n\\t/opt/go/src/runtime/debug/stack.go:24 +0x9f\\ngithub.com/wakatime/wakatime-cli/cmd/legacy.runCmd(0xc000103680, 0xc33c60, 0x0)\\n\\t/home/ferdinand/dev/wakatime-cli/cmd/legacy/run.go:194 +0x26c\\ngithub.com/wakatime/wakatime-cli/cmd/legacy.RunCmdWithOfflineSync(0xc000103680, 0xc33c60)\\n\\t/home/ferdinand/dev/wakatime-cli/cmd/legacy/run.go:163 +0x35\\ngithub.com/wakatime/wakatime-cli/cmd/legacy.Run(0xc0000be2c0, 0xc000103680)\\n\\t/home/ferdinand/dev/wakatime-cli/cmd/legacy/run.go:90 +0x62e\\ngithub.com/wakatime/wakatime-cli/cmd.NewRootCMD.func1(0xc0000be2c0, 0xc00028bd40, 0x0, 0x2)\\n\\t/home/ferdinand/dev/wakatime-cli/cmd/root.go:31 +0x34\\ngithub.com/spf13/cobra.(*Command).execute(0xc0000be2c0, 0xc000020190, 0x2, 0x2, 0xc0000be2c0, 0xc000020190)\\n\\t/home/ferdinand/go/pkg/mod/github.com/spf13/cobra@v1.1.1/command.go:854 +0x2c2\\ngithub.com/spf13/cobra.(*Command).ExecuteC(0xc0000be2c0, 0xc000000180, 0xc0006bff78, 0x407d65)\\n\\t/home/ferdinand/go/pkg/mod/github.com/spf13/cobra@v1.1.1/command.go:958 +0x375\\ngithub.com/spf13/cobra.(*Command).Execute(...)\\n\\t/home/ferdinand/go/pkg/mod/github.com/spf13/cobra@v1.1.1/command.go:895\\ngithub.com/wakatime/wakatime-cli/cmd.Execute()\\n\\t/home/ferdinand/dev/wakatime-cli/cmd/root.go:227 +0x2b\\nmain.main()\\n\\t/home/ferdinand/dev/wakatime-cli/main.go:6 +0x25\\n\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Summary",
+      "filename": "Summary",
+      "seq": 3,
+      "root": {
+        "meta": {
+          "name": "Summary",
+          "seq": 3
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Get summary",
+          "filename": "Get summary.bru",
+          "seq": 1,
+          "request": {
+            "url": "{{BASE_URL}}/api/summary?interval=last_7_days",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "interval",
+                "value": "last_7_days",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Heartbeats",
+      "filename": "Heartbeats",
+      "seq": 2,
+      "root": {
+        "meta": {
+          "name": "Heartbeats",
+          "seq": 2
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Create heartbeat",
+          "filename": "Create heartbeat.bru",
+          "seq": 1,
+          "request": {
+            "url": "{{BASE_URL}}/api/heartbeat",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              },
+              {
+                "name": "X-Machine-Name",
+                "value": "devmachine",
+                "enabled": true
+              },
+              {
+                "name": "User-Agent",
+                "value": "wakatime/13.0.7 (Linux-4.15.0-91-generic-x86_64-with-glibc2.4) Python3.8.0.final.0 generator/1.42.1 generator-wakatime/4.0.0",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "[{\n    \"entity\": \"/home/user1/dev/proejct1/main.go\",\n    \"project\": \"Project 1\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": 1616680499.113417\n}]",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Shields",
+      "filename": "Shields",
+      "seq": 4,
+      "root": {
+        "meta": {
+          "name": "Shields",
+          "seq": 4
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Get Shields data",
+          "filename": "Get Shields data.bru",
+          "seq": 1,
+          "request": {
+            "url": "{{BASE_URL}}/api/compat/shields/v1/n1try/interval:today/language:Go",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "WakaTime",
+      "filename": "WakaTime",
+      "seq": 5,
+      "root": {
+        "meta": {
+          "name": "WakaTime",
+          "seq": 5
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Get all time",
+          "filename": "Get all time.bru",
+          "seq": 1,
+          "request": {
+            "url": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/all_time_since_today",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Get heartbeats",
+          "filename": "Get heartbeats.bru",
+          "seq": 2,
+          "request": {
+            "url": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/heartbeats?date=2021-02-10",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "date",
+                "value": "2021-02-10",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Get stats with range",
+          "filename": "Get stats with range.bru",
+          "seq": 4,
+          "request": {
+            "url": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/stats/last_7_days",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Get stats",
+          "filename": "Get stats.bru",
+          "seq": 3,
+          "request": {
+            "url": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/stats",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Get statusbar",
+          "filename": "Get statusbar.bru",
+          "seq": 6,
+          "request": {
+            "url": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/statusbar/today",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Get summaries",
+          "filename": "Get summaries.bru",
+          "seq": 5,
+          "request": {
+            "url": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/summaries?start=2020-03-01T15:04:05Z&end=2020-03-31T15:04:05Z",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Basic {{TOKEN}}",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "start",
+                "value": "2020-03-01T15:04:05Z",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "end",
+                "value": "2020-03-31T15:04:05Z",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      },
+      "script": {
+        "req": "const apiKey = bru.getVar('API_KEY')\n\nif (!apiKey) {\n    throw new Error('no api key given')\n}\n\nconst token = base64encode(apiKey)\nbru.setVar('TOKEN', token)\n\nfunction base64encode(str) {\n    return Buffer.from(str, 'utf-8').toString('base64')\n}"
+      },
+      "vars": {
+        "req": [
+          {
+            "name": "BASE_URL",
+            "value": "http://localhost:3000",
+            "enabled": true,
+            "local": false,
+            "uid": "Faqvkys9c1b5tsOT0vY4h"
+          },
+          {
+            "name": "API_KEY",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "fDkF19FKoc7KfCXzDvy8W"
+          }
+        ]
+      }
+    },
+    "meta": {
+      "name": "Wakapi"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "Wakapi",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}
