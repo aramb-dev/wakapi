@@ -1,0 +1,3634 @@
+{
+  "info": {
+    "name": "Wakapi API Tests",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Authenticate (header)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?interval=today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?interval=today"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "today"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Authenticate (query param)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?interval=today&api_key={{WRITEUSER_API_KEY}}",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?interval=today&api_key={{WRITEUSER_API_KEY}}"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "today"
+                },
+                {
+                  "key": "api_key",
+                  "value": "{{WRITEUSER_API_KEY}}"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Login (wrong password)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});",
+                  "",
+                  "test(\"No redirect\", function () {",
+                  "//     pm.response.to.not.have.header(\"Location\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/login",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "testuser",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "password",
+                  "value": "wrongpassword",
+                  "disabled": false,
+                  "type": "default"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 302\", function () {",
+                  "    expect(res.getStatus()).to.equal(302);",
+                  "});",
+                  "",
+                  "test(\"Redirect to summary\", function () {",
+                  "    expect(res.getHeader(\"Location\")).to.eql(\"/summary\");",
+                  "});",
+                  "",
+                  "test(\"Sets cookie\", function () {",
+                  "    expect(res.getHeader(\"Set-Cookie\")).to.include(\"wakapi_auth=\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/login",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "testuser",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "password",
+                  "value": "testpassword",
+                  "disabled": false,
+                  "type": "default"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sign up existing user (conflict)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 409\", function () {",
+                  "    expect(res.getStatus()).to.equal(409);",
+                  "});",
+                  "",
+                  "test(\"Body matches string\", function () {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"User already existing\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/signup",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "signup"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "location",
+                  "value": "{{TZ}}",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "username",
+                  "value": "testuser",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "email",
+                  "value": "testuser@wakapi.dev",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "password",
+                  "value": "testpassword",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "password_repeat",
+                  "value": "testpassword",
+                  "disabled": false,
+                  "type": "default"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sign up user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Body matches string\", function () {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"Account created successfully\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/signup",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "signup"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "location",
+                  "value": "{{TZ}}",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "username",
+                  "value": "testuser",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "email",
+                  "value": "testuser@wakapi.dev",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "password",
+                  "value": "testpassword",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "password_repeat",
+                  "value": "testpassword",
+                  "disabled": false,
+                  "type": "default"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Heartbeats",
+      "item": [
+        {
+          "name": "Create heartbeats (alt 1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(2);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[1].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "    expect(jsonData.responses[1][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/current/heartbeats.bulk",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "current",
+                "heartbeats.bulk"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n},\n{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts2}}\n}]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (alt 2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(2);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[1].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "    expect(jsonData.responses[1][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/heartbeats",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "heartbeats"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n},\n{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts2}}\n}]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (alt 3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(2);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[1].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "    expect(jsonData.responses[1][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/current/heartbeats.bulk",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "current",
+                "heartbeats.bulk"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n},\n{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts2}}\n}]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (alt 4, single)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(1);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/heartbeat",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "heartbeat"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (alt 5, single)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(1);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/current/heartbeats",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "current",
+                "heartbeats"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (alt 6, single)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(1);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/heartbeats",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "heartbeats"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (alt 7, single)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(1);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/current/heartbeats",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "current",
+                "heartbeats"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (get heartbeats test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/heartbeat",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "heartbeat"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": 1640995200\n},\n{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": 1641074400\n},\n{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": 1641081600\n}]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (non-matching)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 404\", function () {",
+                  "    expect(res.getStatus()).to.equal(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/v2/users/current/heartbeats",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "users",
+                "current",
+                "heartbeats"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats (unauthorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/heartbeat",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "heartbeat"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[{\n    \"entity\": \"/home/user1/dev/proejct1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{tsNowMinus1Min}}\n}]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create heartbeats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 201\", function () {",
+                  "    expect(res.getStatus()).to.equal(201);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.responses.length).to.eql(2);",
+                  "    expect(jsonData.responses[0].length).to.eql(2);",
+                  "    expect(jsonData.responses[1].length).to.eql(2);",
+                  "    expect(jsonData.responses[0][1]).to.eql(201);",
+                  "    expect(jsonData.responses[1][1]).to.eql(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/heartbeat",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "heartbeat"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts1}}\n},\n{\n    \"entity\": \"/home/user1/dev/project1/main.go\",\n    \"project\": \"wakapi\",\n    \"language\": \"Go\",\n    \"is_write\": true,\n    \"type\": \"file\",\n    \"category\": null,\n    \"branch\": null,\n    \"time\": {{ts3}}\n}]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get heartbeats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Response body is correct\", function () {",
+                  "    var jsonData = res.getBody();",
+                  "    expect(jsonData.timezone).to.eql(bru.getVar('TZ'));",
+                  "    var date = new Date(\"2022-01-01T00:00:00+0100\")",
+                  "    expect(new Date(jsonData.start)).to.eql(date);",
+                  "    expect(new Date(jsonData.end)).to.eql(new Date(date.getTime() + 3600 * 1000 * 24 - 1000));",
+                  "    expect(jsonData.data.length).to.eql(2);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/heartbeats?date=2022-01-01",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "heartbeats?date=2022-01-01"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2022-01-01"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shields",
+      "item": [
+        {
+          "name": "Get shields (filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.message).to.eql('0 hrs 0 mins');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/shields/v1/writeuser/interval:last_7_days/project:nonexisting",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "shields",
+                "v1",
+                "writeuser",
+                "interval:last_7_days",
+                "project:nonexisting"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get shields (invalid range)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 403\", function () {",
+                  "    expect(res.getStatus()).to.equal(403);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/shields/v1/writeuser/interval:last_30_days",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "shields",
+                "v1",
+                "writeuser",
+                "interval:last_30_days"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get shields (non-shared entity type)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 403\", function () {",
+                  "    expect(res.getStatus()).to.equal(403);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/shields/v1/writeuser/interval:today/language:Go",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "shields",
+                "v1",
+                "writeuser",
+                "interval:today",
+                "language:Go"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get shields (not sharing)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 403\", function () {",
+                  "    expect(res.getStatus()).to.equal(403);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/shields/v1/readuser/interval:today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "shields",
+                "v1",
+                "readuser",
+                "interval:today"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get shields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.message).to.eql('0 hrs 2 mins');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/shields/v1/writeuser/interval:last_7_days/project:wakapi",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "shields",
+                "v1",
+                "writeuser",
+                "interval:last_7_days",
+                "project:wakapi"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "Use Case: Custom Mappings",
+          "item": [
+            {
+              "name": "1. Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Body contains string\", function () {",
+                      "    expect(JSON.stringify(res.getBody())).to.include(\"Total Time\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/login",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "login"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "username",
+                      "value": "writeuser",
+                      "disabled": false,
+                      "type": "default"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{WRITEUSER_PASSWORD}}",
+                      "disabled": false,
+                      "type": "default"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "2. Add custom mapping",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Body contains string\", function () {",
+                      "    expect(JSON.stringify(res.getBody())).to.include(\"Mapping added successfully\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "action",
+                      "value": "add_mapping",
+                      "disabled": false,
+                      "type": "default"
+                    },
+                    {
+                      "key": "extension",
+                      "value": "go",
+                      "disabled": false,
+                      "type": "default"
+                    },
+                    {
+                      "key": "language",
+                      "value": "Gogo",
+                      "disabled": false,
+                      "type": "default"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "3. Check summary",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Correct language\", function () {",
+                      "    const jsonData = res.getBody();",
+                      "    expect(jsonData.languages.length).to.eql(1);",
+                      "    expect(jsonData.languages[0].key).to.eql('Gogo');",
+                      "});",
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "setTimeout(() => {}, 1000)"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{WRITEUSER_TOKEN}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/api/summary?interval=today",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "summary?interval=today"
+                  ],
+                  "query": [
+                    {
+                      "key": "interval",
+                      "value": "today"
+                    }
+                  ],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "4. Remove custom mapping",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Body contains string\", function () {",
+                      "    expect(JSON.stringify(res.getBody())).to.include(\"Mapping deleted successfully\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "action",
+                      "value": "delete_mapping",
+                      "disabled": false,
+                      "type": "default"
+                    },
+                    {
+                      "key": "mapping_id",
+                      "value": "0",
+                      "disabled": false,
+                      "type": "default"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "5. Check summary again",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Correct language\", function () {",
+                      "    const jsonData = res.getBody();",
+                      "    expect(jsonData.languages.length).to.eql(1);",
+                      "    expect(jsonData.languages[0].key).to.eql('Go');",
+                      "});",
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{WRITEUSER_TOKEN}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/api/summary?interval=today",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "summary?interval=today"
+                  ],
+                  "query": [
+                    {
+                      "key": "interval",
+                      "value": "today"
+                    }
+                  ],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Use Case: Change E-Mail",
+          "item": [
+            {
+              "name": "1. Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Body contains string\", function () {",
+                      "    expect(JSON.stringify(res.getBody())).to.include(\"Total Time\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/login",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "login"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "username",
+                      "value": "writeuser",
+                      "disabled": false,
+                      "type": "default"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{WRITEUSER_PASSWORD}}",
+                      "disabled": false,
+                      "type": "default"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "2. Set e-mail",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Body contains string\", function () {",
+                      "    expect(JSON.stringify(res.getBody())).to.include(\"User updated successfully\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/settings",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "settings"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "action",
+                      "value": "update_user",
+                      "disabled": false,
+                      "type": "default"
+                    },
+                    {
+                      "key": "location",
+                      "value": "Europe/Berlin",
+                      "disabled": false,
+                      "type": "default"
+                    },
+                    {
+                      "key": "email",
+                      "value": "foo@example.org",
+                      "disabled": false,
+                      "type": "default"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "3. Check e-mail",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "test(\"Status code is 200\", function () {",
+                      "    expect(res.getStatus()).to.equal(200);",
+                      "});",
+                      "",
+                      "test(\"Correct e-mail address\", function () {",
+                      "    const jsonData = res.getBody();",
+                      "    expect(jsonData.data.email).to.eql('foo@example.org');",
+                      "});",
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{WRITEUSER_TOKEN}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current",
+                  "protocol": "",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "compat",
+                    "wakatime",
+                    "v1",
+                    "users",
+                    "current"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Summary",
+      "item": [
+        {
+          "name": "Get summary (default tz)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct time zone\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    const targetDateTz = moment(`2021-05-28T00:00:00${bru.getVar('TZ_OFFSET')}`)",
+                  "    expect(moment(jsonData.from).isSame(targetDateTz)).to.eql(true)",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?from=2021-05-28&to=2021-05-28",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?from=2021-05-28&to=2021-05-28"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2021-05-28"
+                },
+                {
+                  "key": "to",
+                  "value": "2021-05-28"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (last 7 days)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct user\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.user_id).to.eql(\"writeuser\");",
+                  "});",
+                  "",
+                  "test(\"Correct summary data\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.projects.length).to.eql(1);",
+                  "    expect(jsonData.languages.length).to.eql(1);",
+                  "    expect(jsonData.editors.length).to.eql(1);",
+                  "    expect(jsonData.operating_systems.length).to.eql(1);",
+                  "    expect(jsonData.machines.length).to.eql(1);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?interval=last_7_days",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?interval=last_7_days"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "last_7_days"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (parse tz)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct time zone\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    // when it was midnight in UTC+3, it was still 11 pm in Germany",
+                  "    const targetDateTz = moment(`2021-05-28T00:00:00${bru.getVar('TZ_OFFSET')}`).add(-1, 'h')",
+                  "    expect(moment(jsonData.from).isSame(targetDateTz)).to.eql(true)",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?from=2021-05-28T00:00:00%2B03:00&to=2021-05-28T00:00:00%2B03:00",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?from=2021-05-28T00:00:00%2B03:00&to=2021-05-28T00:00:00%2B03:00"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2021-05-28T00:00:00%2B03:00"
+                },
+                {
+                  "key": "to",
+                  "value": "2021-05-28T00:00:00%2B03:00"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (range)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct user\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.user_id).to.eql(\"writeuser\");",
+                  "});",
+                  "",
+                  "test(\"Correct summary data\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.projects.length).to.eql(1);",
+                  "    expect(jsonData.languages.length).to.eql(1);",
+                  "    expect(jsonData.editors.length).to.eql(1);",
+                  "    expect(jsonData.operating_systems.length).to.eql(1);",
+                  "    expect(jsonData.machines.length).to.eql(1);",
+                  "});",
+                  "",
+                  "test(\"Correct dates\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(moment(jsonData.from).unix()).to.gte(moment(bru.getVar('tsStartOfDayIso')).unix())",
+                  "    expect(moment(jsonData.to).unix()).to.lte(moment(bru.getVar('tsEndOfDayIso')).unix())",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?from={{tsStartOfDayIso}}&to={{tsEndOfDayIso}}",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?from={{tsStartOfDayIso}}&to={{tsEndOfDayIso}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{tsStartOfDayIso}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{tsEndOfDayIso}}"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (today)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct user\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.user_id).to.eql(\"writeuser\");",
+                  "});",
+                  "",
+                  "test(\"Correct summary data\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.projects.length).to.eql(1);",
+                  "    expect(jsonData.languages.length).to.eql(1);",
+                  "    expect(jsonData.editors.length).to.eql(1);",
+                  "    expect(jsonData.operating_systems.length).to.eql(1);",
+                  "    expect(jsonData.machines.length).to.eql(1);",
+                  "    expect(jsonData.branches).to.be.null;",
+                  "});",
+                  "",
+                  "/*",
+                  "// This is something the unit tests are supposed to check",
+                  "// pm.test(\"Correct summary range\", function () {",
+                  "//     const jsonData = pm.response.json();",
+                  "    const from = moment(jsonData.from)",
+                  "    const to = moment(jsonData.to)",
+                  "",
+                  "//     pm.expect(moment.duration(moment().diff(from.add(2, 'm'))).asSeconds()).to.lt(10); // first heartbeat is now minus 1 min minus some latency",
+                  "//     pm.expect(moment.duration(moment().diff(to.add(1, 'm'))).asSeconds()).to.lt(10); // first heartbeat is now minus 1 min minus some latency",
+                  "});",
+                  "*/"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?interval=today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?interval=today"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "today"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (today, filtered non-matching)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct user\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.user_id).to.eql(\"writeuser\");",
+                  "});",
+                  "",
+                  "test(\"Correct summary data\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.projects.length).to.eql(0);",
+                  "    expect(jsonData.languages.length).to.eql(0);",
+                  "    expect(jsonData.editors.length).to.eql(0);",
+                  "    expect(jsonData.operating_systems.length).to.eql(0);",
+                  "    expect(jsonData.machines.length).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?interval=today&project=wakapi&language=JavaScript",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?interval=today&project=wakapi&language=JavaScript"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "today"
+                },
+                {
+                  "key": "project",
+                  "value": "wakapi"
+                },
+                {
+                  "key": "language",
+                  "value": "JavaScript"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (today, filtered)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct user\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.user_id).to.eql(\"writeuser\");",
+                  "});",
+                  "",
+                  "test(\"Correct summary data\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.projects.length).to.eql(1);",
+                  "    expect(jsonData.languages.length).to.eql(1);",
+                  "    expect(jsonData.editors.length).to.eql(1);",
+                  "    expect(jsonData.operating_systems.length).to.eql(1);",
+                  "    expect(jsonData.machines.length).to.eql(1);",
+                  "    expect(jsonData.branches.length).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?interval=today&project=wakapi&language=Go",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?interval=today&project=wakapi&language=Go"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "today"
+                },
+                {
+                  "key": "project",
+                  "value": "wakapi"
+                },
+                {
+                  "key": "language",
+                  "value": "Go"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (unauthenticated)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?interval=today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?interval=today"
+              ],
+              "query": [
+                {
+                  "key": "interval",
+                  "value": "today"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get summary (week)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const moment = require('moment')",
+                  "",
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct user\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.user_id).to.eql(\"writeuser\");",
+                  "});",
+                  "",
+                  "test(\"Correct summary data\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.projects.length).to.eql(1);",
+                  "    expect(jsonData.languages.length).to.eql(1);",
+                  "    expect(jsonData.editors.length).to.eql(1);",
+                  "    expect(jsonData.operating_systems.length).to.eql(1);",
+                  "    expect(jsonData.machines.length).to.eql(1);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/summary?start=week",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "summary?start=week"
+              ],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "week"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Metrics",
+      "item": [
+        {
+          "name": "Get admin metrics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct Content-Type\", function () {",
+                  "    expect(res.getHeader(\"Content-Type\")).to.eql(\"text/plain; charset=utf-8\");",
+                  "});",
+                  "",
+                  "test(\"Body matches string\", function () {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"wakatime_heartbeats_total\");",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"wakatime_admin_heartbeats_total\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{READUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/metrics",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "metrics"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get metrics (unauthorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/metrics",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "metrics"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get user metrics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct Content-Type\", function () {",
+                  "    expect(res.getHeader(\"Content-Type\")).to.eql(\"text/plain; charset=utf-8\");",
+                  "});",
+                  "",
+                  "test(\"Body matches string\", function () {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"wakatime_heartbeats_total\");",
+                  "    expect(JSON.stringify(res.getBody())).to.not.include(\"wakatime_admin_heartbeats_total\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/metrics",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "metrics"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Web Views",
+      "item": [
+        {
+          "name": "Imprint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"</html>\")",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/imprint",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "imprint"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Leaderboard (public)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"</html>\")",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/leaderboard",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "leaderboard"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Leaderboard",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"</html>\")",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/leaderboard",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "leaderboard"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"</html>\")",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/login",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "writeuser",
+                  "disabled": false,
+                  "type": "default"
+                },
+                {
+                  "key": "password",
+                  "value": "{{WRITEUSER_PASSWORD}}",
+                  "disabled": false,
+                  "type": "default"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"</html>\")",
+                  "})",
+                  "",
+                  "test(\"User is not logged in\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.not.include(\"User Profile Avatar\")",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/logout",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "logout"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Projects",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"</html>\")",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/projects",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "projects"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Settings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include(\"</html>\")",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/settings",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "settings"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Summary",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Full template is rendered\", function() {",
+                  "    expect(JSON.stringify(res.getBody())).to.include('</html>')",
+                  "    expect(JSON.stringify(res.getBody())).to.include('<span class=\"text-sm\">Logout</span>')",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/summary",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "summary"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "WakaTime",
+      "item": [
+        {
+          "name": "Get all time (unauthenticated)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/writeuser/all_time_since_today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "writeuser",
+                "all_time_since_today"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get all time",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.text).to.eql('0 hrs 2 mins');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/all_time_since_today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "all_time_since_today"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get projects (unauthenticated)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/writeuser/projects",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "writeuser",
+                "projects"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get projects",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.length).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/projects",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "projects"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (by user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.languages.length).to.eql(0);  // share_languages is false",
+                  "    expect(jsonData.data.projects.length).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/writeuser/stats",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "writeuser",
+                "stats"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (current)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.languages.length).to.eql(1); // share_languages is false, but user is authorized",
+                  "    expect(jsonData.data.projects.length).to.eql(1);",
+                  "    expect(jsonData.data.branches).to.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/stats",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "stats"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (current, alt 1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.languages.length).to.eql(1); // share_languages is false, but user is authorized",
+                  "    expect(jsonData.data.projects.length).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/current/stats/today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "current",
+                "stats",
+                "today"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (filtered non-matching)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.projects.length).to.eql(0);",
+                  "    expect(jsonData.data.total_seconds).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/stats?project=wakapi&language=JavaScript",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "stats?project=wakapi&language=JavaScript"
+              ],
+              "query": [
+                {
+                  "key": "project",
+                  "value": "wakapi"
+                },
+                {
+                  "key": "language",
+                  "value": "JavaScript"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (filtered)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.projects.length).to.eql(1);",
+                  "    expect(jsonData.data.total_seconds).to.gt(0);",
+                  "    expect(jsonData.data.branches.length).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/stats?project=wakapi&language=Go",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "stats?project=wakapi&language=Go"
+              ],
+              "query": [
+                {
+                  "key": "project",
+                  "value": "wakapi"
+                },
+                {
+                  "key": "language",
+                  "value": "Go"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (out of range)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 403\", function () {",
+                  "    expect(res.getStatus()).to.equal(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/writeuser/stats/30_days",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "writeuser",
+                "stats",
+                "30_days"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (range)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.projects.length).to.eql(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/writeuser/stats/last_7_days",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "writeuser",
+                "stats",
+                "last_7_days"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get statusbar (current)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.grand_total.text).to.contains(\"0 hrs\");",
+                  "    expect(jsonData.data.categories).to.instanceOf(Array);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current/statusbar/today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current",
+                "statusbar",
+                "today"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get stats (not sharing)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 403\", function () {",
+                  "    expect(res.getStatus()).to.equal(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/readuser/stats/today",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "readuser",
+                "stats",
+                "today"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get user (current)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 200\", function () {",
+                  "    expect(res.getStatus()).to.equal(200);",
+                  "});",
+                  "",
+                  "test(\"Correct content\", function () {",
+                  "    const jsonData = res.getBody();",
+                  "    expect(jsonData.data.id).to.eql('writeuser');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/current",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "current"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get user (forbidden user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{WRITEUSER_TOKEN}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/readuser",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "readuser"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get user (unauthenticated)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test(\"Status code is 401\", function () {",
+                  "    expect(res.getStatus()).to.equal(401);",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "{{BASE_URL}}/api/compat/wakatime/v1/users/writeuser",
+              "protocol": "",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "compat",
+                "wakatime",
+                "v1",
+                "users",
+                "writeuser"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "WRITEUSER_TOKEN",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "WRITEUSER_API_KEY",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "TZ",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "ts1",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "ts2",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "tsNowMinus1Min",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "ts3",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "WRITEUSER_PASSWORD",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "tsStartOfDayIso",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "tsEndOfDayIso",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "READUSER_TOKEN",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
